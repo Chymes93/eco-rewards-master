@@ -1,0 +1,207 @@
+.referContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+.uploadContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+.mainContent {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  font-family: 'Poppins', sans-serif;
+  color: #000000;
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: #666;
+  text-align: left;
+  margin-bottom: 1rem;
+  max-width: 36rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.referralLinkContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #f9fafb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.referralLink {
+  flex-grow: 1;
+  padding: 0.875rem;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: #4b5563;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.875rem;
+}
+
+.copyButton {
+  padding: 0.875rem;
+  background-color: white;
+  border-left: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+}
+
+.copyButton:hover {
+  background-color: #f3f4f6;
+}
+
+.socialOptions {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.socialOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.socialOption:hover {
+  transform: translateY(-2px);
+}
+
+.socialIconContainer {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.socialIconContainer:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+.socialLabel {
+  font-size: 0.875rem;
+  color: #141415;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 1.5rem 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .socialOptions {
+    gap: 1.5rem;
+  }
+
+  .socialIconContainer {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .referralLinkContainer {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .socialIconContainer {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .socialLabel {
+    font-size: 0.75rem;
+  }
+
+  .socialOptions {
+    gap: 1rem;
+  }
+
+  .referralLink {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+  }
+}
+
+/* Animation for highlighting the referral link */
+@keyframes highlightPulse {
+  0% {
+    background-color: rgba(74, 222, 128, 0.1);
+  }
+  50% {
+    background-color: rgba(74, 222, 128, 0.2);
+  }
+  100% {
+    background-color: rgba(74, 222, 128, 0);
+  }
+}
+
+:global(.highlight-pulse) {
+  animation: highlightPulse 1.5s ease-in-out;
+}

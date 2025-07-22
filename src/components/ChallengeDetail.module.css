@@ -1,0 +1,265 @@
+.challengeContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.challengeType {
+  background-color: #1a8d2d;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: -1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.challengeCard {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.challengeTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.challengeDescription {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.contentContainer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.imageSection {
+  flex: 1;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.challengeImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.uploadSection {
+  flex: 1;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.fileIcon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  color: #4dabf7;
+}
+
+.uploadDescription {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.selectButton {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  max-width: 200px;
+  text-align: center;
+}
+
+.selectButton:hover {
+  border-color: #888;
+}
+
+.uploadButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+.uploadButton:hover {
+  background-color: #3d8b40;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.fileIcon {
+  color: #4dabf7;
+  margin-right: 0.5rem;
+}
+
+.fileName {
+  font-size: 0.875rem;
+  color: #333;
+  margin-right: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileProgress {
+  flex-grow: 1;
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin: 0 0.5rem;
+  position: relative;
+}
+
+.fileProgressBar {
+  position: absolute;
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 3px;
+}
+
+.filePercentage {
+  font-size: 0.75rem;
+  color: #666;
+  min-width: 36px;
+  text-align: right;
+}
+
+.progressContainer {
+  width: 100%;
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 6px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.markDoneButton {
+  flex: 1;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.markDoneButton:hover {
+  background-color: #333;
+}
+
+.viewPointsButton {
+  flex: 1;
+  background-color: transparent;
+  color: black;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.viewPointsButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+}

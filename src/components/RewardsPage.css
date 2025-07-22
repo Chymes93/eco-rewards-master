@@ -1,0 +1,39 @@
+
+/* Apply only on screens less than 768px */
+@media (max-width: 767px) {
+    .hall-container {
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+  
+    .hall-profile {
+      width: 8rem !important;
+      height: 8rem !important;
+    }
+  
+    .hall-profile img {
+      width: 4.5rem !important;
+      height: 4.5rem !important;
+    }
+  
+    .hall-icon {
+      width: 2rem !important;
+      height: 2rem !important;
+      top: -1.25rem !important;
+    }
+  
+    .first-place {
+      margin-bottom: 1rem !important;
+      margin-top: 1rem !important;
+    }
+  
+    .hall-title {
+      font-size: 1.5rem !important;
+    }
+  
+    .hall-btn {
+      padding: 0.6rem 1.25rem !important;
+      font-size: 0.875rem !important;
+    }
+}
+  

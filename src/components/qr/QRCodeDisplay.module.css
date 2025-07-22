@@ -1,0 +1,231 @@
+.container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.successMessage {
+  background-color: #f0fff4;
+  border: 1px solid #9ae6b4;
+  color: #2f855a;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.qrId {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+.qrCodeContainer {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.qrCode {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.scanText {
+  margin-top: 1rem;
+  color: #4a5568;
+  font-size: 0.875rem;
+}
+
+.detailsContainer {
+  background-color: #f7fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.detailItem:last-child {
+  border-bottom: none;
+}
+
+.detailItem span:first-child {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.points {
+  color: #48bb78;
+  font-weight: 600;
+}
+
+.category {
+  text-transform: capitalize;
+}
+
+.scanUrlContainer {
+  margin-bottom: 2rem;
+}
+
+.scanUrlContainer p {
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+}
+
+.scanUrlWrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.scanUrl {
+  flex: 1;
+  background-color: #f7fafc;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  word-break: break-all;
+  border: 1px solid #e2e8f0;
+}
+
+.copyButton {
+  background-color: #4299e1;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.copyButton:hover {
+  background-color: #3182ce;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.testButton,
+.previewButton {
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.testButton {
+  background-color: #48bb78;
+  color: white;
+  border: none;
+}
+
+.previewButton {
+  background-color: #805ad5;
+  color: white;
+  border: none;
+}
+
+.testButton:hover,
+.previewButton:hover {
+  opacity: 0.9;
+}
+
+.backButton {
+  background-color: #e2e8f0;
+  color: #4a5568;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #cbd5e0;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #4a5568;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #4299e1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorContainer {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.errorContainer h3 {
+  color: #e53e3e;
+  margin-bottom: 0.5rem;
+}
+
+.errorContainer p {
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+}

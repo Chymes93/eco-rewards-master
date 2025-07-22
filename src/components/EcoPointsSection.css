@@ -1,0 +1,10 @@
+.btn-1 {
+  padding: 12px 83px;
+}
+
+@media (max-width: 768px) {
+  .btn-1 {
+    margin-right: 30px;
+  }
+}
+

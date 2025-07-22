@@ -1,0 +1,255 @@
+/* Global Responsive Styles */
+
+/* Base responsive container */
+.container-responsive {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Responsive text sizes */
+.text-responsive {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.title-responsive {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.subtitle-responsive {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* Responsive spacing */
+.margin-responsive {
+  margin: clamp(1rem, 3vw, 2rem);
+}
+
+.padding-responsive {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+/* Responsive grid layouts */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive flex layouts */
+.flex-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Responsive images */
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive tables */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive cards */
+.card-responsive {
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-responsive:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive buttons */
+.btn-responsive {
+  padding: clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 3vw, 2rem);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+}
+
+/* Responsive form elements */
+.input-responsive {
+  width: 100%;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+}
+
+/* Hide scrollbars but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Hide elements on mobile */
+@media (max-width: 639px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Hide elements on tablet */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Hide elements on desktop */
+@media (min-width: 1024px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Show elements only on mobile */
+.show-mobile {
+  display: none !important;
+}
+
+@media (max-width: 639px) {
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* Show elements only on tablet */
+.show-tablet {
+  display: none !important;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .show-tablet {
+    display: block !important;
+  }
+}
+
+/* Show elements only on desktop */
+.show-desktop {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .show-desktop {
+    display: block !important;
+  }
+}
+
+/* Responsive container breakpoints */
+@media (min-width: 480px) {
+  .container-responsive {
+    max-width: 460px;
+  }
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    max-width: 620px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: 740px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: 980px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: 1200px;
+  }
+}
+
+/* Animations for better UX */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-in-out;
+}
+
+.slide-down {
+  animation: slideDown 0.5s ease-in-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-in-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
