@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import DashboardNavbar from './components/DashboardNavbar';
 import LandingPage from './components/LandingPage';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
@@ -26,6 +25,8 @@ import QRScanLandingPage from './components/qr/QRScanLandingPage';
 import FAQ from './components/FAQ';
 import About from './components/About';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import CommunityPage from './pages/CommunityPage';
+import PartnersPage from './pages/PartnersPage';
 
 const NavbarWrapper = () => {
   const location = useLocation();
@@ -52,10 +53,6 @@ const NavbarWrapper = () => {
     return null;
   }
 
-  // Check if we should show DashboardNavbar
-  if (location.pathname === '/rewards') {
-    return <DashboardNavbar />;
-  }
 
   // Check if navbar should be hidden
   const shouldShowNavbar =
@@ -158,6 +155,8 @@ const Display = () => {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/about" element={<About />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/community" element={<CommunityPage />} />
+            <Route path="/partners" element={<PartnersPage />} />
 
             {/* QR Code Routes */}
             <Route path="/qr-generate" element={<QRGenerator />} />
