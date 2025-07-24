@@ -9,7 +9,7 @@ const posts = [
   {
     id: 1,
     author: 'Alex',
-    avatar: 'https://i.pravatar.cc/150?u=alex',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=CarbonFootprint_X',
     timestamp: '2h ago',
     title: 'How I Got 500pts Fast',
     content: 'To maximize points in EcoReward, focus on completing eco-friendly tasks, using sustainable products, participating in eco-challenges, tracking progress, referring friends, and staying updated on new opportunities',
@@ -22,7 +22,7 @@ const posts = [
   {
     id: 2,
     author: 'Me',
-    avatar: 'https://i.pravatar.cc/150?u=me',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92',
     timestamp: '2h ago',
     title: 'How I Got 500pts Fast',
     content: 'To maximize points in EcoReward, focus on completing eco-friendly tasks, using sustainable products, participating in eco-challenges, tracking progress, referring friends, and staying updated on new opportunities',
@@ -35,7 +35,7 @@ const posts = [
   {
     id: 3,
     author: 'Jane',
-    avatar: 'https://i.pravatar.cc/150?u=jane',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EcoHero_Tobi',
     timestamp: '3h ago',
     title: 'Sustainable Living Tips',
     content: 'Just wanted to share some tips on sustainable living! I started composting and it\'s been great. Also, using reusable bags for shopping makes a huge difference. What are your favorite tips?',
@@ -47,8 +47,8 @@ const posts = [
   },
   {
     id: 4,
-    author: 'Sam',
-    avatar: 'https://i.pravatar.cc/150?u=sam',
+    author: 'Tobi',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SustainableQueen',
     timestamp: '5h ago',
     title: 'EcoReward New Feature Idea',
     content: 'I think it would be cool to have a feature where we can trade points with friends. What do you all think? It could encourage more people to join and participate.',
@@ -61,7 +61,7 @@ const posts = [
   {
     id: 5,
     author: 'Me',
-    avatar: 'https://i.pravatar.cc/150?u=me',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92',
     timestamp: '1d ago',
     title: 'My Eco-Challenge Progress',
     content: 'I\'ve completed 5 eco-challenges this week! It feels amazing to contribute to a healthier planet and earn rewards at the same time.',
@@ -74,7 +74,7 @@ const posts = [
   {
     id: 6,
     author: 'Me',
-    avatar: 'https://i.pravatar.cc/150?u=me',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92',
     timestamp: '2d ago',
     title: 'Question about recycling',
     content: 'Does anyone know if you can recycle pizza boxes? I\'ve heard conflicting information. Some say yes, some say no because of the grease.',
@@ -87,8 +87,8 @@ const posts = [
 
   {
     id: 8,
-    author: 'Agnes Josh',
-    avatar: 'https://i.pravatar.cc/150?u=agnesjosh',
+    author: 'Ada',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ZeroWasteAda',
     timestamp: '2h ago',
     title: 'How I Got 500pts Fast',
     content: 'To maximize points in EcoReward, focus on completing eco-friendly tasks, using sustainable products, participating in eco-challenges, tracking progress, referring friends, and staying updated on new opportunities',
@@ -100,7 +100,7 @@ const posts = [
   {
     id: 9,
     author: 'Me',
-    avatar: 'https://i.pravatar.cc/150?u=me',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92',
     timestamp: '2h ago',
     title: 'How I Got 500pts Fast',
     content: 'To maximize points in EcoReward, focus on completing eco-friendly tasks, using sustainable products, participating in eco-challenges, tracking progress, referring friends, and staying updated on new opportunities',
@@ -112,7 +112,7 @@ const posts = [
   {
     id: 10,
     author: 'Mary Doe',
-    avatar: 'https://i.pravatar.cc/150?u=marydoe',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=RecycleKing_Lagos',
     timestamp: '2h ago',
     title: 'How I Got 500pts Fast',
     content: 'To maximize points in EcoReward, focus on completing eco-friendly tasks, using sustainable products, participating in eco-challenges, tracking progress, referring friends, and staying updated on new opportunities',
@@ -142,7 +142,7 @@ const CommunityPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <img className="h-10 w-10 rounded-full" src="https://i.pravatar.cc/150?u=me" alt="My Avatar" />
+            <img className="h-10 w-10 rounded-full" src="https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92" alt="My Avatar" />
           </div>
           <div className="-mr-2 -my-2 md:hidden">
             <button
@@ -190,7 +190,7 @@ const CommunityPage = () => {
             <div className="pt-5 pb-6 px-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <img className="h-10 w-10 rounded-full" src="https://i.pravatar.cc/150?u=me" alt="My Avatar" />
+                  <img className="h-10 w-10 rounded-full" src="https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92" alt="My Avatar" />
                 </div>
                 <div className="-mr-2">
                   <button
