@@ -79,73 +79,73 @@ const Display = () => {
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute>
+                
                   <Dashboard />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/leaderboard"
               element={
-                <ProtectedRoute>
+                
                   <LeaderboardPage />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/upload-receipt"
               element={
-                <ProtectedRoute>
+                
                   <UploadReceipt />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/receipt-history"
               element={
-                <ProtectedRoute>
+                
                   <ReceiptHistory />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/join-challenge"
               element={
-                <ProtectedRoute>
+                
                   <JoinChallenge />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/refer-friend"
               element={
-                <ProtectedRoute>
+                
                   <ReferFriend />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/challenge/:id"
               element={
-                <ProtectedRoute>
+                
                   <ChallengePage />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/settings"
               element={
-                <ProtectedRoute>
+                
                   <Settings />
-                </ProtectedRoute>
+                
               }
             />
             <Route
               path="/rewards"
               element={
-                <ProtectedRoute>
+                
                   <RewardsPage />
-                </ProtectedRoute>
+                
               }
             />
             <Route
