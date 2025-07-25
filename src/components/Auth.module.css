@@ -19,7 +19,7 @@
 
 .authImageSection {
   flex: 1.2;
-  background: url('../assets/Frame4.png') no-repeat center center;
+  background: url("../assets/Frame4.png") no-repeat center center;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -31,7 +31,7 @@
 }
 
 .authImageSection::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -95,6 +95,17 @@
   color: #374151;
 }
 
+.formInput::-webkit-outer-spin-button,
+.formInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.formInput::-ms-reveal,
+.formInput::-ms-clear {
+  display: none;
+}
+
 .formInput:focus {
   border-color: #16a34a;
   outline: none;
@@ -103,6 +114,11 @@
 
 .formInput::placeholder {
   color: #9ca3af;
+}
+
+.formInput[type="password"]::-webkit-textfield-decoration-container {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .phoneGroup {
@@ -165,6 +181,7 @@
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  min-height: 48px;
 }
 
 .submitButton:hover {
@@ -188,7 +205,7 @@
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -264,8 +281,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Media Queries */
@@ -274,18 +295,18 @@
     flex-direction: column;
     max-width: 600px;
   }
-  
+
   .authImageSection {
     flex: none;
     min-height: 200px;
     border-radius: 16px 16px 0 0;
     padding: 2rem;
   }
-  
+
   .authImageSection::before {
     border-radius: 16px 16px 0 0;
   }
-  
+
   .authFormSection {
     border-radius: 0 0 16px 16px;
   }
@@ -295,50 +316,50 @@
   .authContainer {
     padding: 1rem;
   }
-  
+
   .authCard {
     border-radius: 12px;
   }
-  
+
   .authImageSection {
     min-height: 150px;
     padding: 1.5rem;
     border-radius: 12px 12px 0 0;
   }
-  
+
   .authImageSection::before {
     border-radius: 12px 12px 0 0;
   }
-  
+
   .authFormSection {
     padding: 2rem 1.5rem;
     border-radius: 0 0 12px 12px;
   }
-  
+
   .authTitle {
     font-size: 1.8rem;
   }
-  
+
   .formInput,
   .countryCode,
   .submitButton {
     padding: 0.8rem;
     font-size: 0.9rem;
   }
-  
+
   .socialLogin {
     gap: 1rem;
   }
-  
+
   .socialButton {
     width: 40px;
     height: 40px;
   }
-  
+
   .otpContainer {
     margin: 1.5rem 0;
   }
-  
+
   .otpInput {
     width: 2.5rem;
     height: 2.5rem;

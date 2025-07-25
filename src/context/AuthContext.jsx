@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // Simulate signup process
+  // Updated signup process with email verification
   const signup = async (userData) => {
     try {
       setLoading(true);
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
             accept: 'application/json',
           },
           body: JSON.stringify({
-            name: userData.fullName,
+            name: userData.name || userData.fullName, // Support both field names
             email: userData.email,
             password: userData.password,
           }),
@@ -59,19 +59,27 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.error || 'Registration failed');
       }
 
-      // Store user data and token
-      const user = {
-        ...data.user,
-        token: data.token,
-      };
+      // Check if the response indicates email verification is required
+      if (data.message && data.message.includes('verify')) {
+        // Email verification required - don't log user in yet
+        return { 
+          success: true, 
+          requiresEmailVerification: true,
+          message: data.message,
+          email: userData.email 
+        };
+      } else {
+        // Old flow - immediate login (if backend doesn't have email verification yet)
+        const user = {
+          ...data.user,
+          token: data.token,
+        };
 
-      localStorage.setItem('ecoRewardsUser', JSON.stringify(user));
-      setCurrentUser(user);
-
-      // Navigate to home page on successful registration
-      navigate('/');
-
-      return { success: true };
+        localStorage.setItem('ecoRewardsUser', JSON.stringify(user));
+        setCurrentUser(user);
+        navigate('/');
+        return { success: true };
+      }
     } catch (error) {
       setAuthError(error.message || 'An error occurred during signup');
       return { success: false, error: error.message };
@@ -80,7 +88,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Simulate login process
+  // Updated login process to handle email verification
   const login = async (credentials) => {
     try {
       setLoading(true);
@@ -104,6 +112,16 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (!response.ok) {
+        // Check if it's an email verification error
+        if (data.requiresEmailVerification) {
+          setAuthError('Please verify your email before logging in');
+          return { 
+            success: false, 
+            requiresEmailVerification: true,
+            email: data.email || credentials.email,
+            error: 'Please verify your email before logging in'
+          };
+        }
         throw new Error(data.error || 'Login failed');
       }
 
@@ -128,7 +146,81 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Simulate OTP verification
+  // New function: Verify email with token
+  const verifyEmail = async (token) => {
+    try {
+      setLoading(true);
+      setAuthError(null);
+
+      const response = await fetch(
+        `https://ecorewards-deploy.vercel.app/api/v1/auth/verify-email/${token}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Email verification failed');
+      }
+
+      // Email verified successfully - log user in
+      const user = {
+        ...data.user,
+        token: data.token,
+      };
+
+      localStorage.setItem('ecoRewardsUser', JSON.stringify(user));
+      setCurrentUser(user);
+
+      return { success: true, user };
+    } catch (error) {
+      setAuthError(error.message || 'Email verification failed');
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // New function: Resend email verification
+  const resendEmailVerification = async (email) => {
+    try {
+      setLoading(true);
+      setAuthError(null);
+
+      const response = await fetch(
+        'https://ecorewards-deploy.vercel.app/api/v1/auth/resend-verification',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to resend verification email');
+      }
+
+      return { success: true, message: data.message };
+    } catch (error) {
+      setAuthError(error.message || 'Failed to resend verification email');
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Existing OTP verification (keeping for backward compatibility)
   const verifyOTP = async (otp) => {
     try {
       setLoading(true);
@@ -177,7 +269,7 @@ export const AuthProvider = ({ children }) => {
     navigate('/');
   };
 
-  // Resend OTP
+  // Resend OTP (keeping for backward compatibility)
   const resendOTP = async () => {
     try {
       setLoading(true);
@@ -199,6 +291,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Helper functions for manual state updates
+  const setUser = (user) => {
+    setCurrentUser(user);
+    if (user) {
+      localStorage.setItem('ecoRewardsUser', JSON.stringify(user));
+    }
+  };
+
+  const setToken = (token) => {
+    if (currentUser) {
+      const updatedUser = { ...currentUser, token };
+      setCurrentUser(updatedUser);
+      localStorage.setItem('ecoRewardsUser', JSON.stringify(updatedUser));
+    }
+  };
+
   const value = {
     currentUser,
     loading,
@@ -211,6 +319,10 @@ export const AuthProvider = ({ children }) => {
     logout,
     verifyOTP,
     resendOTP,
+    verifyEmail, // New function
+    resendEmailVerification, // New function
+    setUser, // Helper function
+    setToken, // Helper function
     setAuthError,
   };
 
