@@ -1,66 +1,8 @@
-import React from 'react';
-import Trophy from '../assets/Trophy.png';
-import { FaChevronRight } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-
-const leaderboardData = [
-  {
-    rank: 1,
-    username: 'GreenWarrior92',
-    points: 3500,
-    movement: 'up',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92',
-  },
-  {
-    rank: 2,
-    username: 'EcoHero_Tobi',
-    points: 3200,
-    movement: 'up',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EcoHero_Tobi',
-  },
-  {
-    rank: 3,
-    username: 'EcoHero_Tobi',
-    points: 3200,
-    movement: 'none',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EcoHero_Tobi',
-  },
-  {
-    rank: 4,
-    username: 'RecycleKing_Lagos',
-    points: 2600,
-    movement: 'none',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=RecycleKing_Lagos',
-  },
-  {
-    rank: 5,
-    username: 'SustainableQueen',
-    points: 2780,
-    movement: 'down',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SustainableQueen',
-  },
-  {
-    rank: 6,
-    username: 'CarbonFootprint_X',
-    points: 1800,
-    movement: 'none',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=CarbonFootprint_X',
-  },
-  {
-    rank: 7,
-    username: 'ZeroWasteAda',
-    points: 2200,
-    movement: 'down',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ZeroWasteAda',
-  },
-  {
-    rank: 8,
-    username: 'GreenLifestyle',
-    points: 1700,
-    movement: 'up',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenLifestyle',
-  },
-];
+import React, { useEffect } from "react";
+import Trophy from "../assets/Trophy.png";
+import { FaChevronRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useLeaderboard } from "../context/LeaderboardContext";
 
 // Mobile card view for leaderboard entries
 const LeaderboardCard = ({ user }) => (
@@ -68,10 +10,10 @@ const LeaderboardCard = ({ user }) => (
     <div className="flex items-center gap-3">
       <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full text-gray-700 font-semibold">
         {user.rank}
-        {user.movement === 'up' && (
+        {user.movement === "up" && (
           <span className="text-green-500 text-xs ml-0.5">▲</span>
         )}
-        {user.movement === 'down' && (
+        {user.movement === "down" && (
           <span className="text-red-500 text-xs ml-0.5">▼</span>
         )}
       </div>
@@ -86,14 +28,41 @@ const LeaderboardCard = ({ user }) => (
       </div>
     </div>
     <div className="text-right font-medium text-eco-green">
-      {user.points.toLocaleString()} pts
+      {user.points?.toLocaleString()} pts
     </div>
   </div>
 );
 
+// Loading skeleton component
+const LoadingSkeleton = () => (
+  <div className="animate-pulse">
+    {[...Array(5)].map((_, index) => (
+      <div
+        key={index}
+        className="flex items-center gap-3 p-4 border-b border-gray-50"
+      >
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        <div className="flex-1 bg-gray-300 h-4 rounded"></div>
+        <div className="w-20 h-4 bg-gray-300 rounded"></div>
+      </div>
+    ))}
+  </div>
+);
+
 const Leaderboard = () => {
-  // Show only top 5 in the landing page
-  const topUsers = leaderboardData.slice(0, 5);
+  const { leaderboard, loading, error, fetchLeaderboard, getTopUsers } =
+    useLeaderboard();
+
+  // Get top 5 users for display
+  const topUsers = getTopUsers(5);
+
+  // Refresh data on component mount if no data
+  useEffect(() => {
+    if (leaderboard.length === 0) {
+      fetchLeaderboard();
+    }
+  }, []);
 
   return (
     <section className="bg-eco-black py-12 sm:py-16">
@@ -110,70 +79,140 @@ const Leaderboard = () => {
             />
           </div>
 
+          {/* Error State */}
+          {error && (
+            <div className="text-center py-8">
+              <p className="text-red-500 mb-4">
+                Error loading leaderboard: {error}
+              </p>
+              <button
+                onClick={() => fetchLeaderboard()}
+                className="px-4 py-2 bg-eco-green text-white rounded-full hover:bg-green-600 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && !error && (
+            <div className="hidden sm:block">
+              <LoadingSkeleton />
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && topUsers.length === 0 && (
+            <div className="text-center py-8">
+              <p className="text-gray-500 mb-4">
+                No leaderboard data available
+              </p>
+              <button
+                onClick={() => fetchLeaderboard()}
+                className="px-4 py-2 bg-eco-green text-white rounded-full hover:bg-green-600 transition-colors"
+              >
+                Load Leaderboard
+              </button>
+            </div>
+          )}
+
           {/* Desktop Table View - Hidden on Mobile */}
-          <div className="hidden sm:block overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-gray-100">
-                  <th className="py-3 px-4 text-left text-gray-600">Rank</th>
-                  <th className="py-3 px-4 text-left text-gray-600">User</th>
-                  <th className="py-3 px-4 text-right text-gray-600">
-                    Eco point
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {topUsers.map((user) => (
-                  <tr
-                    key={user.rank}
-                    className="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150"
-                  >
-                    <td className="py-3 px-4 flex items-center gap-1">
-                      {user.rank}
-                      {user.movement === 'up' && (
-                        <span className="text-green-500">▲</span>
-                      )}
-                      {user.movement === 'down' && (
-                        <span className="text-red-500">▼</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={user.avatar}
-                          alt={`${user.username}'s avatar`}
-                          className="w-8 h-8 rounded-full object-cover"
-                          loading="lazy"
-                        />
-                        <span className="font-medium">{user.username}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-right font-medium text-eco-green">
-                      {user.points.toLocaleString()} pts
-                    </td>
+          {!loading && !error && topUsers.length > 0 && (
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-100">
+                    <th className="py-3 px-4 text-left text-gray-600">Rank</th>
+                    <th className="py-3 px-4 text-left text-gray-600">User</th>
+                    <th className="py-3 px-4 text-right text-gray-600">
+                      Eco point
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {topUsers.map((user) => (
+                    <tr
+                      key={`${user.rank}-${user.username}`}
+                      className="border-b border-gray-50 hover:bg-gray-50 transition-colors duration-150"
+                    >
+                      <td className="py-3 px-4 flex items-center gap-1">
+                        {user.rank}
+                        {user.movement === "up" && (
+                          <span className="text-green-500">▲</span>
+                        )}
+                        {user.movement === "down" && (
+                          <span className="text-red-500">▼</span>
+                        )}
+                        {user.movement === "new" && (
+                          <span className="text-blue-500">🆕</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={user.avatar}
+                            alt={`${user.username}'s avatar`}
+                            className="w-8 h-8 rounded-full object-cover"
+                            loading="lazy"
+                          />
+                          <span className="font-medium">{user.username}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-right font-medium text-eco-green">
+                        {user.points?.toLocaleString()} pts
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Mobile Card View - Shown only on Mobile */}
-          <div className="sm:hidden space-y-3">
-            {topUsers.map((user) => (
-              <LeaderboardCard key={user.rank} user={user} />
-            ))}
-          </div>
+          {!loading && !error && topUsers.length > 0 && (
+            <div className="sm:hidden space-y-3">
+              {topUsers.map((user) => (
+                <LeaderboardCard
+                  key={`mobile-${user.rank}-${user.username}`}
+                  user={user}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Loading state for mobile */}
+          {loading && !error && (
+            <div className="sm:hidden space-y-3">
+              {[...Array(5)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-200 rounded-xl p-4 animate-pulse"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+                      <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+                      <div className="w-24 h-4 bg-gray-300 rounded"></div>
+                    </div>
+                    <div className="w-16 h-4 bg-gray-300 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* View Full Leaderboard Button */}
-          <div className="mt-6 text-center">
-            <Link
-              to="/leaderboard"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-eco-green text-white rounded-full hover:bg-green-600 transition-colors duration-200 text-sm font-medium"
-            >
-              View Full Leaderboard
-              <FaChevronRight size={12} />
-            </Link>
-          </div>
+          {!loading && !error && topUsers.length > 0 && (
+            <div className="mt-6 text-center">
+              <Link
+                to="/leaderboard"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-eco-green text-white rounded-full hover:bg-green-600 transition-colors duration-200 text-sm font-medium"
+              >
+                View Full Leaderboard
+                <FaChevronRight size={12} />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>

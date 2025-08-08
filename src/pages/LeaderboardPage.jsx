@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
   User,
@@ -9,70 +9,12 @@ import {
   Menu,
   X,
   Search,
-} from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import Group from '../assets/Group.png';
-import MiniFooter from '../components/MiniFooter';
-import Trophy from '../assets/Trophy.png';
-
-const leaderboardData = [
-  {
-    rank: 1,
-    username: 'GreenWarrior92',
-    points: 3500,
-    movement: 'up',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenWarrior92',
-  },
-  {
-    rank: 3,
-    username: 'EcoHero_Tobi',
-    points: 3200,
-    movement: 'none',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EcoHero_Tobi',
-  },
-  {
-    rank: 5,
-    username: 'SustainableQueen',
-    points: 2780,
-    movement: 'down',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=SustainableQueen',
-  },
-  {
-    rank: 4,
-    username: 'RecycleKing_Lagos',
-    points: 2600,
-    movement: 'none',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=RecycleKing_Lagos',
-  },
-  {
-    rank: 2,
-    username: 'EcoHero_Tobi',
-    points: 3200,
-    movement: 'up',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EcoHero_Tobi',
-  },
-  {
-    rank: 7,
-    username: 'ZeroWasteAda',
-    points: 2200,
-    movement: 'down',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ZeroWasteAda',
-  },
-  {
-    rank: 6,
-    username: 'CarbonFootprint_X',
-    points: 1800,
-    movement: 'none',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=CarbonFootprint_X',
-  },
-  {
-    rank: 8,
-    username: 'GreenLifestyle',
-    points: 1700,
-    movement: 'up',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GreenLifestyle',
-  },
-];
+} from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useLeaderboard } from "../context/LeaderboardContext";
+import Group from "../assets/Group.png";
+import MiniFooter from "../components/MiniFooter";
+import Trophy from "../assets/Trophy.png";
 
 // Mobile card view for leaderboard entries
 const LeaderboardCard = ({ user }) => (
@@ -80,11 +22,14 @@ const LeaderboardCard = ({ user }) => (
     <div className="flex items-center gap-3">
       <div className="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full text-gray-700 font-semibold">
         {user.rank}
-        {user.movement === 'up' && (
+        {user.movement === "up" && (
           <span className="text-green-500 text-xs ml-0.5">▲</span>
         )}
-        {user.movement === 'down' && (
+        {user.movement === "down" && (
           <span className="text-red-500 text-xs ml-0.5">▼</span>
+        )}
+        {user.movement === "new" && (
+          <span className="text-blue-500 text-xs ml-0.5">🆕</span>
         )}
       </div>
       <div className="flex items-center gap-2">
@@ -98,7 +43,41 @@ const LeaderboardCard = ({ user }) => (
       </div>
     </div>
     <div className="text-right font-medium text-eco-green">
-      {user.points.toLocaleString()} pts
+      {user.points?.toLocaleString()} pts
+    </div>
+  </div>
+);
+
+// Loading skeleton for table rows
+const TableRowSkeleton = () => (
+  <tr className="border-b border-gray-100">
+    <td className="py-3 px-4">
+      <div className="flex items-center gap-2">
+        <div className="w-6 h-6 bg-gray-300 rounded animate-pulse"></div>
+      </div>
+    </td>
+    <td className="py-3 px-4">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse"></div>
+        <div className="w-24 h-4 bg-gray-300 rounded animate-pulse"></div>
+      </div>
+    </td>
+    <td className="py-3 px-4 text-right">
+      <div className="w-16 h-4 bg-gray-300 rounded animate-pulse ml-auto"></div>
+    </td>
+  </tr>
+);
+
+// Loading skeleton for mobile cards
+const CardSkeleton = () => (
+  <div className="bg-gray-200 rounded-xl p-4 animate-pulse">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        <div className="w-24 h-4 bg-gray-300 rounded"></div>
+      </div>
+      <div className="w-16 h-4 bg-gray-300 rounded"></div>
     </div>
   </div>
 );
@@ -112,7 +91,7 @@ const LeaderboardNavbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
     setIsMenuOpen(false);
     setIsUserDropdownOpen(false);
   };
@@ -125,9 +104,9 @@ const LeaderboardNavbar = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -195,7 +174,7 @@ const LeaderboardNavbar = () => {
               <User className="w-5 h-5" />
               <ChevronDown
                 className={`w-3 h-3 ml-1 transition-transform duration-200 ${
-                  isUserDropdownOpen ? 'rotate-180' : ''
+                  isUserDropdownOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
@@ -221,7 +200,7 @@ const LeaderboardNavbar = () => {
             to="/settings"
             onClick={(e) => {
               e.preventDefault();
-              navigate('/settings', { state: { activeTab: 'notifications' } });
+              navigate("/settings", { state: { activeTab: "notifications" } });
             }}
             className="text-gray-700 hover:text-eco-green-dark transition-colors duration-200 p-2 rounded-full hover:bg-gray-100 relative"
             aria-label="Notifications"
@@ -293,10 +272,13 @@ const LeaderboardNavbar = () => {
 };
 
 const LeaderboardPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState('rank'); // 'rank', 'points', 'name'
-  const [sortDirection, setSortDirection] = useState('asc'); // 'asc', 'desc'
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState("rank"); // 'rank', 'points', 'name'
+  const [sortDirection, setSortDirection] = useState("asc"); // 'asc', 'desc'
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Get leaderboard data from context
+  const { leaderboard, loading, error, fetchLeaderboard } = useLeaderboard();
 
   // Handle window resize
   useEffect(() => {
@@ -304,24 +286,31 @@ const LeaderboardPage = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Load data on component mount
+  useEffect(() => {
+    if (leaderboard.length === 0) {
+      fetchLeaderboard(1, 50); // Load more data for full leaderboard page
+    }
   }, []);
 
   // Filter and sort data
-  const processedData = leaderboardData
+  const processedData = leaderboard
     .filter((user) =>
       user.username.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOrder === 'rank') {
-        return sortDirection === 'asc' ? a.rank - b.rank : b.rank - a.rank;
-      } else if (sortOrder === 'points') {
-        return sortDirection === 'asc'
+      if (sortOrder === "rank") {
+        return sortDirection === "asc" ? a.rank - b.rank : b.rank - a.rank;
+      } else if (sortOrder === "points") {
+        return sortDirection === "asc"
           ? a.points - b.points
           : b.points - a.points;
-      } else if (sortOrder === 'name') {
-        return sortDirection === 'asc'
+      } else if (sortOrder === "name") {
+        return sortDirection === "asc"
           ? a.username.localeCompare(b.username)
           : b.username.localeCompare(a.username);
       }
@@ -330,16 +319,16 @@ const LeaderboardPage = () => {
 
   const toggleSort = (field) => {
     if (sortOrder === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortOrder(field);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
   const getSortIcon = (field) => {
     if (sortOrder === field) {
-      return sortDirection === 'asc' ? (
+      return sortDirection === "asc" ? (
         <ChevronUp className="w-3 h-3" />
       ) : (
         <ChevronDown className="w-3 h-3" />
@@ -385,111 +374,164 @@ const LeaderboardPage = () => {
             </div>
           </div>
 
+          {/* Error State */}
+          {error && (
+            <div className="text-center py-8">
+              <p className="text-red-500 mb-4">
+                Error loading leaderboard: {error}
+              </p>
+              <button
+                onClick={() => fetchLeaderboard(1, 50)}
+                className="px-4 py-2 bg-eco-green text-white rounded-full hover:bg-green-600 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+
           {/* Desktop Table View */}
-          {!isMobile && (
+          {!isMobile && !error && (
             <div className="overflow-x-auto rounded-xl border border-gray-100">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
                     <th
                       className="py-3 px-4 text-left text-sm sm:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
-                      onClick={() => toggleSort('rank')}
+                      onClick={() => toggleSort("rank")}
                     >
                       <div className="flex items-center gap-1">
                         Rank
-                        {getSortIcon('rank')}
+                        {getSortIcon("rank")}
                       </div>
                     </th>
                     <th
                       className="py-3 px-4 text-left text-sm sm:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
-                      onClick={() => toggleSort('name')}
+                      onClick={() => toggleSort("name")}
                     >
                       <div className="flex items-center gap-1">
                         User
-                        {getSortIcon('name')}
+                        {getSortIcon("name")}
                       </div>
                     </th>
                     <th
                       className="py-3 px-4 text-right text-sm sm:text-base font-semibold text-gray-700 cursor-pointer hover:bg-gray-100"
-                      onClick={() => toggleSort('points')}
+                      onClick={() => toggleSort("points")}
                     >
                       <div className="flex items-center justify-end gap-1">
                         Eco Points
-                        {getSortIcon('points')}
+                        {getSortIcon("points")}
                       </div>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {processedData.map((user) => (
-                    <tr
-                      key={user.rank}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150"
-                    >
-                      <td className="py-3 px-4 flex items-center gap-2">
-                        <span className="font-semibold text-gray-800">
-                          {user.rank}
-                        </span>
-                        {user.movement === 'up' && (
-                          <span className="text-green-500 text-sm">▲</span>
-                        )}
-                        {user.movement === 'down' && (
-                          <span className="text-red-500 text-sm">▼</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={user.avatar}
-                            alt={`${user.username}'s avatar`}
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
-                            loading="lazy"
-                          />
-                          <span className="font-medium text-gray-800">
-                            {user.username}
+                  {loading && (
+                    <>
+                      {[...Array(10)].map((_, index) => (
+                        <TableRowSkeleton key={index} />
+                      ))}
+                    </>
+                  )}
+                  {!loading &&
+                    processedData.map((user) => (
+                      <tr
+                        key={`${user.rank}-${user.username}`}
+                        className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150"
+                      >
+                        <td className="py-3 px-4 flex items-center gap-2">
+                          <span className="font-semibold text-gray-800">
+                            {user.rank}
                           </span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right font-semibold text-eco-green">
-                        {user.points.toLocaleString()} pts
-                      </td>
-                    </tr>
-                  ))}
+                          {user.movement === "up" && (
+                            <span className="text-green-500 text-sm">▲</span>
+                          )}
+                          {user.movement === "down" && (
+                            <span className="text-red-500 text-sm">▼</span>
+                          )}
+                          {user.movement === "new" && (
+                            <span className="text-blue-500 text-sm">🆕</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={user.avatar}
+                              alt={`${user.username}'s avatar`}
+                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
+                              loading="lazy"
+                            />
+                            <span className="font-medium text-gray-800">
+                              {user.username}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-right font-semibold text-eco-green">
+                          {user.points?.toLocaleString()} pts
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
           )}
 
           {/* Mobile Card View */}
-          {isMobile && (
+          {isMobile && !error && (
             <div className="space-y-3">
               <div className="flex justify-between items-center mb-2 px-2">
                 <button
-                  onClick={() => toggleSort('rank')}
+                  onClick={() => toggleSort("rank")}
                   className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-eco-green transition-colors duration-200"
                 >
-                  Sort by Rank {getSortIcon('rank')}
+                  Sort by Rank {getSortIcon("rank")}
                 </button>
                 <button
-                  onClick={() => toggleSort('points')}
+                  onClick={() => toggleSort("points")}
                   className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-eco-green transition-colors duration-200"
                 >
-                  Sort by Points {getSortIcon('points')}
+                  Sort by Points {getSortIcon("points")}
                 </button>
               </div>
 
-              {processedData.map((user) => (
-                <LeaderboardCard key={user.rank} user={user} />
-              ))}
+              {loading && (
+                <>
+                  {[...Array(10)].map((_, index) => (
+                    <CardSkeleton key={index} />
+                  ))}
+                </>
+              )}
+
+              {!loading &&
+                processedData.map((user) => (
+                  <LeaderboardCard
+                    key={`mobile-${user.rank}-${user.username}`}
+                    user={user}
+                  />
+                ))}
             </div>
           )}
 
           {/* No Results Message */}
-          {processedData.length === 0 && (
+          {!loading && !error && processedData.length === 0 && searchQuery && (
             <div className="text-center py-8">
               <p className="text-gray-500">
                 No users found matching "{searchQuery}"
               </p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && leaderboard.length === 0 && !searchQuery && (
+            <div className="text-center py-8">
+              <p className="text-gray-500 mb-4">
+                No leaderboard data available
+              </p>
+              <button
+                onClick={() => fetchLeaderboard(1, 50)}
+                className="px-4 py-2 bg-eco-green text-white rounded-full hover:bg-green-600 transition-colors"
+              >
+                Load Leaderboard
+              </button>
             </div>
           )}
         </div>

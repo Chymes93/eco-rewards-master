@@ -6,6 +6,7 @@ import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import LoadingSpinner from "./LoadingSpinner";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 function SignUp() {
   const [fullName, setFullName] = useState("");
@@ -24,6 +25,7 @@ function SignUp() {
   };
 
   const validateForm = () => {
+    toast.loading("Creating your account...");
     const newErrors = {};
 
     if (!fullName.trim()) {
@@ -40,6 +42,10 @@ function SignUp() {
       newErrors.password = "Password is required";
     } else if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      toast.error("Please fix the errors below");
     }
 
     setErrors(newErrors);
@@ -62,12 +68,18 @@ function SignUp() {
 
         // Check if registration was successful and requires email verification
         if (result && result.success && result.requiresEmailVerification) {
+          toast.dismiss(); // dismiss loading toast
+          toast.success(
+            "Account created successfully! Please check your email."
+          );
           setRegistrationSuccess(true);
           setUserEmail(email);
         }
         // If result.success is true but no requiresEmailVerification,
         // the user was logged in directly (old flow)
       } catch (error) {
+        toast.dismiss(); // dismiss loading toast
+        toast.error("Registration failed. Please try again.");
         // Error handling is done in the auth context
         console.error("Registration error:", error);
       }
@@ -75,21 +87,43 @@ function SignUp() {
   };
 
   const handleSocialSignup = (provider) => {
-    // In a real app, this would integrate with social login providers
-    alert(`${provider} signup would be implemented here`);
+    toast(`${provider} signup coming soon!`, {
+      icon: "ℹ️",
+      style: {
+        background: "#228B22",
+        color: "#fff",
+      },
+    });
   };
 
   const handleResendVerification = async () => {
     try {
       const result = await resendEmailVerification(userEmail);
       if (result && result.success) {
-        alert("Verification email sent successfully! Please check your inbox.");
+        toast.success(
+          "Verification email sent successfully! Please check your inbox."
+        );
       } else {
-        alert(result?.error || "Failed to resend verification email");
+        toast.error(result?.error || "Failed to resend verification email");
       }
     } catch (error) {
       console.error("Resend verification error:", error);
-      alert("Failed to resend verification email");
+      toast.error("Failed to resend verification email. Please try again.");
+    }
+  };
+
+  const maskEmail = (email) => {
+    if (!email) return "";
+
+    const [localPart, domain] = email.split("@");
+
+    if (localPart.length <= 3) {
+      // If local part is very short, show first char + asterisks
+      return `${localPart[0]}***@${domain}`;
+    } else {
+      // Show first 2 chars + asterisks + last char of local part
+      const maskedLocal = `${localPart.slice(0, 2)}***${localPart.slice(-1)}`;
+      return `${maskedLocal}@${domain}`;
     }
   };
 
@@ -122,7 +156,7 @@ function SignUp() {
                   fontSize: "1.1rem",
                 }}
               >
-                {userEmail}
+                {maskEmail(userEmail)}
               </p>
 
               <div
@@ -239,7 +273,7 @@ function SignUp() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="mt-4">
             <div className={styles.formGroup}>
               <input
                 type="text"
@@ -302,34 +336,6 @@ function SignUp() {
               )}
             </button>
           </form>
-
-          <div className={styles.divider}>
-            <span>Or</span>
-          </div>
-
-          <div className={styles.socialLogin}>
-            <button
-              className={styles.socialButton}
-              onClick={() => handleSocialSignup("Google")}
-              aria-label="Sign up with Google"
-            >
-              <FaGoogle />
-            </button>
-            <button
-              className={styles.socialButton}
-              onClick={() => handleSocialSignup("Facebook")}
-              aria-label="Sign up with Facebook"
-            >
-              <FaFacebook />
-            </button>
-            <button
-              className={styles.socialButton}
-              onClick={() => handleSocialSignup("Twitter")}
-              aria-label="Sign up with Twitter"
-            >
-              <FaXTwitter />
-            </button>
-          </div>
         </div>
       </div>
     </div>

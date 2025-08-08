@@ -16,7 +16,6 @@ const Hero = () => {
         </p>
         <div className="hero-buttons">
           <Link to="/signup" className="btn btn-primary">Get Started</Link>
-          <button className="btn btn-secondary">Watch how it works</button>
         </div>
         <p className="hero-user-count">Join 50,000+ eco-conscious users!</p>
       </div>

@@ -6,6 +6,7 @@ import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import LoadingSpinner from "./LoadingSpinner";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -42,28 +43,114 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAuthError(null);
-    setShowEmailVerificationAlert(false);
 
     if (validateForm()) {
+      toast.loading("Signing you in...");
+
       try {
         const result = await login({ email, password });
 
+        toast.dismiss(); // Remove loading toast
+
         // Check if login failed due to unverified email
         if (result && result.requiresEmailVerification) {
-          setShowEmailVerificationAlert(true);
+          toast.error("Please verify your email before logging in", {
+            duration: 5000,
+          });
+
+          // Show resend verification toast after a short delay
+          setTimeout(() => {
+            toast(
+              (t) => (
+                <div>
+                  <span>Need to resend verification email?</span>
+                  <button
+                    onClick={() => {
+                      handleResendVerification();
+                      toast.dismiss(t.id);
+                    }}
+                    style={{
+                      marginLeft: "8px",
+                      background: "#16a34a",
+                      color: "white",
+                      border: "none",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                    }}
+                  >
+                    Resend
+                  </button>
+                </div>
+              ),
+              {
+                duration: 8000,
+              }
+            );
+          }, 1000);
+
           setUnverifiedEmail(email);
+        } else {
+          // Successful login
+          toast.success("Login successful!");
         }
       } catch (error) {
+        toast.dismiss(); // Remove loading toast
+
         // Check if the error response indicates email verification needed
         if (
           error.response &&
           error.response.data &&
           error.response.data.requiresEmailVerification
         ) {
-          setShowEmailVerificationAlert(true);
+          toast.error("Please verify your email before logging in", {
+            duration: 5000,
+          });
+
+          // Show resend verification toast
+          setTimeout(() => {
+            toast(
+              (t) => (
+                <div>
+                  <span>Need to resend verification email?</span>
+                  <button
+                    onClick={() => {
+                      handleResendVerification();
+                      toast.dismiss(t.id);
+                    }}
+                    style={{
+                      marginLeft: "8px",
+                      background: "#16a34a",
+                      color: "white",
+                      border: "none",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                    }}
+                  >
+                    Resend
+                  </button>
+                </div>
+              ),
+              {
+                duration: 8000,
+              }
+            );
+          }, 1000);
+
           setUnverifiedEmail(email);
+        } else {
+          // Other login errors
+          toast.error(
+            "Login failed. Please check your credentials and try again."
+          );
         }
       }
+    } else {
+      // Form validation failed
+      toast.error("Please fix the errors below");
     }
   };
 
@@ -87,15 +174,17 @@ function Login() {
 
       const data = await response.json();
 
-      if (data.success) {
-        alert("Verification email sent successfully! Please check your inbox.");
+      if (response.ok && data.success) {
+        toast.success(
+          "Verification email sent successfully! Please check your inbox."
+        );
         setShowEmailVerificationAlert(false);
       } else {
-        alert(data.error || "Failed to resend verification email");
+        toast.error(data.error || "Failed to resend verification email");
       }
     } catch (error) {
       console.error("Resend verification error:", error);
-      alert("Failed to resend verification email");
+      toast.error("Failed to resend verification email. Please try again.");
     }
   };
 
@@ -121,73 +210,6 @@ function Login() {
               Sign Up
             </Link>
           </p>
-
-          {/* Email Verification Alert */}
-          {showEmailVerificationAlert && (
-            <div
-              style={{
-                backgroundColor: "#fef3cd",
-                border: "1px solid #fbbf24",
-                borderRadius: "8px",
-                padding: "1rem",
-                marginBottom: "1rem",
-                position: "relative",
-              }}
-            >
-              <button
-                onClick={dismissVerificationAlert}
-                style={{
-                  position: "absolute",
-                  top: "0.5rem",
-                  right: "0.5rem",
-                  background: "none",
-                  border: "none",
-                  fontSize: "1.2rem",
-                  cursor: "pointer",
-                  color: "#92400e",
-                }}
-              >
-                ×
-              </button>
-              <div style={{ color: "#92400e" }}>
-                <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "1rem" }}>
-                  📧 Email Verification Required
-                </h4>
-                <p style={{ margin: "0 0 1rem 0", fontSize: "0.9rem" }}>
-                  Please verify your email address before logging in.
-                </p>
-                <div
-                  style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}
-                >
-                  <button
-                    onClick={handleResendVerification}
-                    style={{
-                      backgroundColor: "#f59e0b",
-                      color: "white",
-                      border: "none",
-                      padding: "0.5rem 1rem",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                      fontSize: "0.85rem",
-                    }}
-                  >
-                    Resend Verification Email
-                  </button>
-                  <Link
-                    to="/signup"
-                    style={{
-                      color: "#92400e",
-                      fontSize: "0.85rem",
-                      textDecoration: "underline",
-                      padding: "0.5rem 0",
-                    }}
-                  >
-                    Use Different Email
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
 
           {authError && !showEmailVerificationAlert && (
             <div className={styles.errorMessage} role="alert">

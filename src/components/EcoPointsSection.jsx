@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Tote from '../assets/Tote.png';
-import './EcoPointsSection.css';
+import React, { useState, useEffect } from "react";
+import Tote from "../assets/Tote.png";
+import "./EcoPointsSection.css";
+import { Link } from "react-router-dom";
 
 const sliderImages = [
-  require('../assets/Man.png'),
-  require('../assets/woman.png'),
-  require('../assets/group-happy.png'),
+  require("../assets/Man.png"),
+  require("../assets/woman.png"),
+  require("../assets/group-happy.png"),
 ];
 
 const EcoPointsSection = () => {
@@ -37,7 +38,7 @@ const EcoPointsSection = () => {
               <span
                 key={idx}
                 className={`w-3 h-3 rounded-full border-2 border-white ${
-                  current === idx ? 'bg-green-500' : 'bg-white/40'
+                  current === idx ? "bg-green-500" : "bg-white/40"
                 }`}
               />
             ))}
@@ -50,15 +51,17 @@ const EcoPointsSection = () => {
             activities and actions. Track your <br /> progress as you climb the
             leaderboard, <br />
             competing with others to make the greatest <br /> positive impact on
-            the environment. Join the <br /> movement and see how your efforts{' '}
+            the environment. Join the <br /> movement and see how your efforts{" "}
             <br /> contribute to a greener future!
           </p>
           <div className=" p-6 mb-6 flex flex-col items-center w-full max-w-xs">
             <img src={Tote} alt="Tote Bag" className="" />
           </div>
-          <button className=" btn-1 bg-white text-sm text-black font-poppins ml-9 mb-6 rounded-lg shadow hover:bg-gray-200 transition">
-            Get Started
-          </button>
+          <Link to="/signup">
+            <button className=" btn-1 bg-white text-sm text-black font-poppins ml-9 mb-6 rounded-lg shadow hover:bg-gray-200 transition">
+              Get Started
+            </button>
+          </Link>
         </div>
       </div>
     </section>

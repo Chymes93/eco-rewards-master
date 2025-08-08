@@ -1,96 +1,93 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import styles from "./Auth.module.css";
 import LoadingSpinner from "./LoadingSpinner";
 import { useAuth } from "../context/AuthContext";
 
 function VerifyEmail() {
-  const [verificationStatus, setVerificationStatus] = useState("verifying"); 
+  const [verificationStatus, setVerificationStatus] = useState("verifying");
   const [errorMessage, setErrorMessage] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [countdown, setCountdown] = useState(3);
   const { token } = useParams();
   const navigate = useNavigate();
-  const { setUser, setToken } = useAuth();
+  const { verifyEmail, resendEmailVerification, loading } = useAuth();
 
   useEffect(() => {
-    const verifyEmail = async () => {
+    const handleVerification = async () => {
+      if (!token) {
+        setVerificationStatus("error");
+        setErrorMessage("Invalid verification link");
+        return;
+      }
+
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/v1/auth/verify-email/${token}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const result = await verifyEmail(token);
 
-        const data = await response.json();
-
-        if (data.success) {
-          // Email verification successful - user is now logged in
+        if (result.success) {
           setVerificationStatus("success");
+          toast.success(
+            "Email verified successfully! Welcome to EcoRewards! 🎉"
+          );
 
-          // Set user data and token from the response
-          if (data.user) {
-            setUser(data.user);
-          }
-          if (data.token) {
-            setToken(data.token);
-            localStorage.setItem("token", data.token);
-          }
+          // Start countdown for redirect
+          const countdownInterval = setInterval(() => {
+            setCountdown((prev) => {
+              if (prev <= 1) {
+                clearInterval(countdownInterval);
+                navigate("/dashboard");
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
 
-          // Redirect to dashboard after 3 seconds
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 3000);
+          // Cleanup interval on component unmount
+          return () => clearInterval(countdownInterval);
         } else {
           setVerificationStatus("error");
-          setErrorMessage(data.error || "Verification failed");
+          setErrorMessage(result.error || "Verification failed");
+          toast.error(result.error || "Email verification failed");
         }
       } catch (error) {
         console.error("Verification error:", error);
         setVerificationStatus("error");
         setErrorMessage("Network error. Please try again.");
+        toast.error("Network error. Please try again.");
       }
     };
 
-    if (token) {
-      verifyEmail();
-    } else {
-      setVerificationStatus("error");
-      setErrorMessage("Invalid verification link");
-    }
-  }, [token, navigate, setUser, setToken]);
+    handleVerification();
+  }, [token, verifyEmail, navigate]);
 
   const handleResendVerification = async () => {
-    if (!userEmail) {
-      alert("Please enter your email address");
+    if (!userEmail.trim()) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (!emailRegex.test(userEmail)) {
+      toast.error("Please enter a valid email address");
       return;
     }
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/v1/auth/resend-verification`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: userEmail }),
-        }
-      );
+      const result = await resendEmailVerification(userEmail);
 
-      const data = await response.json();
-
-      if (data.success) {
-        alert("Verification email sent successfully! Please check your inbox.");
+      if (result.success) {
+        toast.success(
+          "Verification email sent successfully! Please check your inbox."
+        );
+        setUserEmail(""); // Clear the input
       } else {
-        alert(data.error || "Failed to resend verification email");
+        toast.error(result.error || "Failed to resend verification email");
       }
     } catch (error) {
       console.error("Resend verification error:", error);
-      alert("Failed to resend verification email");
+      toast.error("Failed to resend verification email");
     }
   };
 
@@ -106,6 +103,11 @@ function VerifyEmail() {
             <p className={styles.authSubtitle}>
               Please wait while we verify your email address...
             </p>
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-blue-700 text-sm">
+                💡 This usually takes just a few seconds
+              </p>
+            </div>
           </div>
         );
 
@@ -146,12 +148,14 @@ function VerifyEmail() {
                   lineHeight: "1.6",
                   maxWidth: "300px",
                   margin: "0 auto",
+                  listStyle: "none",
+                  padding: 0,
                 }}
               >
-                <li>Earn eco points for sustainable actions</li>
-                <li>Claim rewards from our partners</li>
-                <li>Join eco challenges</li>
-                <li>Track your environmental impact</li>
+                <li>🌱 Earn eco points for sustainable actions</li>
+                <li>🎁 Claim rewards from our partners</li>
+                <li>🏆 Join eco challenges and competitions</li>
+                <li>📊 Track your environmental impact</li>
               </ul>
             </div>
 
@@ -165,7 +169,7 @@ function VerifyEmail() {
               }}
             >
               <p style={{ fontSize: "0.9rem", color: "#1e40af", margin: 0 }}>
-                🚀 Redirecting to your dashboard in 3 seconds...
+                🚀 Redirecting to your dashboard in {countdown} seconds...
               </p>
             </div>
 
@@ -244,22 +248,34 @@ function VerifyEmail() {
                   gap: "0.5rem",
                   alignItems: "center",
                   justifyContent: "center",
+                  flexWrap: "wrap",
                 }}
               >
                 <input
                   type="email"
                   placeholder="Enter your email"
                   className={styles.formInput}
-                  style={{ maxWidth: "250px" }}
+                  style={{ maxWidth: "250px", marginBottom: "0.5rem" }}
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      handleResendVerification();
+                    }
+                  }}
                 />
                 <button
                   onClick={handleResendVerification}
+                  disabled={loading}
                   className={styles.submitButton}
-                  style={{ padding: "0.9rem 1rem", minWidth: "auto" }}
+                  style={{
+                    padding: "0.9rem 1rem",
+                    minWidth: "auto",
+                    opacity: loading ? 0.7 : 1,
+                    cursor: loading ? "not-allowed" : "pointer",
+                  }}
                 >
-                  Resend
+                  {loading ? "Sending..." : "Resend"}
                 </button>
               </div>
             </div>
