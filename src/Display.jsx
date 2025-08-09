@@ -28,6 +28,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import CommunityPage from "./pages/CommunityPage";
 import PartnersPage from "./pages/PartnersPage";
 import { LeaderboardProvider } from "./context/LeaderboardContext";
+import { ActivitiesProvider } from "./context/ActivitiesContext";
 
 const NavbarWrapper = () => {
   const location = useLocation();
@@ -69,41 +70,43 @@ const Display = () => {
       <BrowserRouter>
         <AuthProvider>
           <LeaderboardProvider>
-            <NavbarWrapper />
-            <Routes>
-              <Route index element={<LandingPage />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/verify-phone" element={<VerifyPhone />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
+            <ActivitiesProvider>
+              <NavbarWrapper />
+              <Routes>
+                <Route index element={<LandingPage />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/verify-phone" element={<VerifyPhone />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
 
-              <Route path="/verify-email/:token" element={<VerifyEmail />} />
+                <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/leaderboard" element={<LeaderboardPage />} />
-              <Route path="/upload-receipt" element={<UploadReceipt />} />
-              <Route path="/receipt-history" element={<ReceiptHistory />} />
-              <Route path="/join-challenge" element={<JoinChallenge />} />
-              <Route path="/refer-friend" element={<ReferFriend />} />
-              <Route path="/challenge/:id" element={<ChallengePage />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/rewards" element={<RewardsPage />} />
-              <Route
-                path="/notifications-detail/:id"
-                element={<NotificationDetail />}
-              />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/community" element={<CommunityPage />} />
-              <Route path="/partners" element={<PartnersPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/upload-receipt" element={<UploadReceipt />} />
+                <Route path="/receipt-history" element={<ReceiptHistory />} />
+                <Route path="/join-challenge" element={<JoinChallenge />} />
+                <Route path="/refer-friend" element={<ReferFriend />} />
+                <Route path="/challenge/:id" element={<ChallengePage />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/rewards" element={<RewardsPage />} />
+                <Route
+                  path="/notifications-detail/:id"
+                  element={<NotificationDetail />}
+                />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/community" element={<CommunityPage />} />
+                <Route path="/partners" element={<PartnersPage />} />
 
-              {/* QR Code Routes */}
-              <Route path="/qr-generate" element={<QRGenerator />} />
-              <Route path="/qr/display/:qrId" element={<QRCodeDisplay />} />
-              <Route path="/qr/scan/:qrId" element={<QRScanLandingPage />} />
-            </Routes>
+                {/* QR Code Routes */}
+                <Route path="/qr-generate" element={<QRGenerator />} />
+                <Route path="/qr/display/:qrId" element={<QRCodeDisplay />} />
+                <Route path="/qr/scan/:qrId" element={<QRScanLandingPage />} />
+              </Routes>
+            </ActivitiesProvider>
           </LeaderboardProvider>
         </AuthProvider>
       </BrowserRouter>

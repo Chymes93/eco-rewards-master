@@ -130,11 +130,48 @@ export const leaderboardAPI = {
     });
   },
 };
+export const activitiesAPI = {
+  // Get recent activities for current user
+  getRecentActivities: async (limit = 5) => {
+    return apiRequest(`/activities/recent?limit=${limit}`);
+  },
+
+  // Create manual activity
+  createActivity: async (activityData) => {
+    return apiRequest("/activities", {
+      method: "POST",
+      body: JSON.stringify(activityData),
+    });
+  },
+
+  // Scan QR code
+  scanQRCode: async (qrCode, productName, location) => {
+    return apiRequest("/activities/qr-scan", {
+      method: "POST",
+      body: JSON.stringify({
+        qrCode,
+        productName,
+        location,
+      }),
+    });
+  },
+
+  // Get user activities with pagination
+  getUserActivities: async (userId, page = 1, limit = 10) => {
+    return apiRequest(`/activities/user/${userId}?page=${page}&limit=${limit}`);
+  },
+
+  // Get activity statistics
+  getActivityStats: async () => {
+    return apiRequest("/activities/stats");
+  },
+};
 
 // Export default object with all APIs
 const api = {
   auth: authAPI,
   leaderboard: leaderboardAPI,
+  activities: activitiesAPI,
 };
 
 export default api;

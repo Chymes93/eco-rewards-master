@@ -2,8 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../index.css";
-import { HelpCircle } from "lucide-react";
+import {
+  HelpCircle,
+  RefreshCw,
+  TrendingUp,
+  Calendar,
+  Trophy,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useActivities } from "../context/ActivitiesContext";
 import DashboardNavbar from "./DashboardNavbar";
 import PurchaseSummary from "./PurchaseSummary";
 import QRTransactionsSection from "./QRTransactionsSection";
@@ -17,6 +24,15 @@ import missionIcon from "../assets/Mission.png";
 
 const Dashboard = () => {
   const { currentUser, loading, getCurrentUser } = useAuth();
+  const {
+    recentActivities,
+    activityStats,
+    loading: activitiesLoading,
+    error: activitiesError,
+    refreshAllData,
+    activitySummary,
+    hasActivities,
+  } = useActivities();
   const navigate = useNavigate();
 
   // Loading states for data refresh
@@ -51,7 +67,7 @@ const Dashboard = () => {
     };
 
     refreshUserData();
-  }, []);
+  }, [currentUser?.token, getCurrentUser]);
 
   // Update last refresh time
   const updateLastRefreshTime = () => {
@@ -61,7 +77,7 @@ const Dashboard = () => {
     );
   };
 
-  // Manual refresh function
+  // Manual refresh function - now includes activities
   const handleRefresh = async () => {
     if (!currentUser?.token) {
       toast.error("Please log in again");
@@ -73,8 +89,13 @@ const Dashboard = () => {
     toast.loading("Refreshing your data...");
 
     try {
-      const result = await getCurrentUser();
-      if (result.success) {
+      // Refresh both user data and activities data
+      const [userResult] = await Promise.all([
+        getCurrentUser(),
+        refreshAllData(),
+      ]);
+
+      if (userResult.success) {
         toast.dismiss();
         toast.success("Data refreshed successfully!");
         updateLastRefreshTime();
@@ -120,16 +141,53 @@ const Dashboard = () => {
   const ecoPoints = currentUser.points || 0;
   const ecoLevel = currentUser.ecoLevel || "beginner";
 
-  // Mock data for features not yet implemented in backend
-  const challengesCompleted = 1; // TODO: Get from API
-  const badgesEarned = 3; // TODO: Get from API
-  const ongoingStreak = 1; // TODO: Get from API
-  const nextMilestone = 1; // TODO: Get from API
+  // Get real activity data from context
+  const todayActivities = activitySummary?.todayActivities || 0;
+  const totalPointsToday = activitySummary?.totalPointsToday || 0;
+  const qrScansToday = activitySummary?.qrScansToday || 0;
+  const recentCount = activitySummary?.recentCount || 0;
+
+  // Calculate stats from activity data
+  const challengesCompleted = activityStats?.totalActivities || recentCount;
+  const badgesEarned = Math.floor(challengesCompleted / 5) + 1; // Badge every 5 activities
+  const ongoingStreak =
+    activityStats?.currentStreak || (todayActivities > 0 ? 1 : 0);
+  const nextMilestone = Math.ceil(ecoPoints / 1000) * 1000; // Next 1000 point milestone
 
   // Format eco level for display
   const formatEcoLevel = (level) => {
     return level.charAt(0).toUpperCase() + level.slice(1);
   };
+
+  // Calculate progress to next level
+  const getLevelProgress = () => {
+    const levelThresholds = {
+      beginner: 0,
+      intermediate: 100,
+      advanced: 500,
+      expert: 1000,
+    };
+
+    const currentThreshold = levelThresholds[ecoLevel];
+    const nextLevel = Object.keys(levelThresholds).find(
+      (level) => levelThresholds[level] > currentThreshold
+    );
+
+    if (!nextLevel) return { progress: 100, nextLevel: "Max Level" };
+
+    const nextThreshold = levelThresholds[nextLevel];
+    const progress =
+      ((ecoPoints - currentThreshold) / (nextThreshold - currentThreshold)) *
+      100;
+
+    return {
+      progress: Math.min(Math.max(progress, 0), 100),
+      nextLevel: nextLevel.charAt(0).toUpperCase() + nextLevel.slice(1),
+      pointsNeeded: Math.max(nextThreshold - ecoPoints, 0),
+    };
+  };
+
+  const levelProgress = getLevelProgress();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -148,24 +206,54 @@ const Dashboard = () => {
                 <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
                   {formatEcoLevel(ecoLevel)} Level
                 </span>
+                {todayActivities > 0 && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    +{totalPointsToday} points today
+                  </span>
+                )}
               </div>
             </div>
 
             <button
               onClick={handleRefresh}
-              disabled={refreshingData}
+              disabled={refreshingData || activitiesLoading}
               className="px-4 py-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white rounded-lg transition-colors duration-200 flex items-center gap-2"
             >
-              {refreshingData ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Refreshing...
-                </>
-              ) : (
-                "Refresh"
-              )}
+              <RefreshCw
+                className={`w-4 h-4 ${refreshingData ? "animate-spin" : ""}`}
+              />
+              {refreshingData ? "Refreshing..." : "Refresh"}
             </button>
           </div>
+
+          {/* Error Alert */}
+          {activitiesError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <p className="text-red-800 text-sm">
+                <strong>Activity Data Error:</strong> {activitiesError}
+              </p>
+            </div>
+          )}
+
+          {/* Level Progress Bar */}
+          {levelProgress.nextLevel !== "Max Level" && (
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-semibold font-poppins text-gray-800">
+                  Progress to {levelProgress.nextLevel}
+                </h3>
+                <span className="text-sm text-gray-600">
+                  {levelProgress.pointsNeeded} points to go
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div
+                  className="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500"
+                  style={{ width: `${levelProgress.progress}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
 
           {/* Stats and Points Section */}
           <div className="flex flex-col lg:flex-row gap-8 items-start mb-8 justify-between">
@@ -180,7 +268,7 @@ const Dashboard = () => {
                     {challengesCompleted}
                   </span>
                   <span className="text-black font-poppins">
-                    Challenges <br />
+                    Activities <br />
                     Completed
                   </span>
                 </div>
@@ -210,8 +298,8 @@ const Dashboard = () => {
                     {ongoingStreak}
                   </span>
                   <span className="text-black font-poppins">
-                    Ongoing <br />
-                    Streaked
+                    Current <br />
+                    Streak
                   </span>
                 </div>
               </div>
@@ -222,7 +310,7 @@ const Dashboard = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold font-poppins">
-                    {nextMilestone}
+                    {nextMilestone.toLocaleString()}
                   </span>
                   <span className="text-black font-poppins">
                     Next <br />
@@ -260,7 +348,108 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* User Info Card - New Section */}
+          {/* Today's Activity Summary */}
+          {todayActivities > 0 && (
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl shadow-lg p-6 mb-8 border border-green-100">
+              <h3 className="text-lg font-bold font-poppins mb-4 text-gray-800 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-green-600" />
+                Today's Activity
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-green-600">
+                    {todayActivities}
+                  </p>
+                  <p className="text-sm text-gray-600">Activities Completed</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-blue-600">
+                    {totalPointsToday}
+                  </p>
+                  <p className="text-sm text-gray-600">Points Earned</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-600">
+                    {qrScansToday}
+                  </p>
+                  <p className="text-sm text-gray-600">QR Codes Scanned</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Recent Activities Preview */}
+          {hasActivities && (
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold font-poppins text-gray-800 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  Recent Activities
+                </h3>
+                <button
+                  onClick={() => navigate("/activities")}
+                  className="text-green-600 hover:text-green-700 text-sm font-medium"
+                >
+                  View All
+                </button>
+              </div>
+              <div className="space-y-3">
+                {recentActivities.slice(0, 3).map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                  >
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        {activity.activityType === "qr_scan"
+                          ? "QR Code Scan"
+                          : activity.activityType === "manual"
+                          ? "Manual Activity"
+                          : activity.title || "Activity"}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {activity.createdAt
+                          ? new Date(activity.createdAt).toLocaleDateString()
+                          : "Recently"}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-green-600">
+                        +{activity.points || activity.pointsEarned || 0} pts
+                      </p>
+                      {activity.partner && (
+                        <p className="text-xs text-gray-500">
+                          {activity.partner.name}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* No Activities Message */}
+          {!hasActivities && !activitiesLoading && (
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8 text-center">
+              <Trophy className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                No Activities Yet
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Start your eco-journey by scanning QR codes or logging
+                activities!
+              </p>
+              <button
+                onClick={() => navigate("/scan")}
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              >
+                Scan Your First QR Code
+              </button>
+            </div>
+          )}
+
+          {/* User Info Card */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-green-500">
             <h3 className="text-lg font-bold font-poppins mb-4 text-gray-800">
               Account Information

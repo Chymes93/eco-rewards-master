@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Group from "../assets/Group.png";
-import { Bell, ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import "./DashboardNavbar.css";
 
@@ -225,7 +225,7 @@ const DashboardNavbar = () => {
               />
             </button>
             {isUserDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 md:w-52 lg:w-56 bg-white rounded-lg shadow-lg py-3 z-50 border border-gray-100">
+              <div className="absolute right-0 mt-2 w-48 md:w-52 lg:w-max bg-white rounded-lg shadow-lg py-3 z-50 border border-gray-100">
                 {/* User Info Section */}
                 <div className="px-4 py-2 border-b border-gray-100">
                   <div className="flex items-center gap-3">
@@ -282,20 +282,6 @@ const DashboardNavbar = () => {
               </div>
             )}
           </div>
-
-          <Link
-            to="/settings"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("/settings", { state: { activeTab: "notifications" } });
-            }}
-            className="text-gray-700 hover:text-eco-green-dark transition-colors duration-200 p-1.5 md:p-2 rounded-full hover:bg-gray-100 relative"
-            aria-label="Notifications"
-          >
-            <Bell className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-            {/* Optional: Notification badge */}
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-          </Link>
         </div>
 
         {/* Mobile Menu Button */}
